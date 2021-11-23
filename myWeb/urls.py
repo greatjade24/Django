@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, re_path
+from django.urls import path, re_path, include
 from . import views
 
 urlpatterns = [
@@ -22,7 +22,7 @@ urlpatterns = [
     path('test/', views.test),
     path('', views.index),
     path('notice/', views.notice),
-    path('board/<int:boardId>', views.board),
+    #path('board/<int:boardId>', views.board),
     path('language/<languageId>', views.language),
     re_path(r'reg1/(.)/', views.reg1),
     re_path(r'reg2/(..)/', views.reg2),
@@ -38,4 +38,17 @@ urlpatterns = [
     re_path(r'reg12/([a-zA-Z0-9ㄱ-힣]+)/', views.reg12),
     re_path(r'reg13/([a-zA-Z0-9]+@[a-z]+.[a-z]+)/', views.reg13),
     re_path(r'reg14/(01[0-2]-[0-9]{4}-[0-9]{4})/', views.reg14),
+    re_path(r'reg15/(\d+)',views.reg15),
+    re_path(r'reg16/(\w+)',views.reg16),
+    re_path(r'email/(\w+[@]\w+[.]\w{3}|\w+[@]\w+[.]\w+[.]\w+)', views.email),
+    re_path(r'lang/(ko|en|jp)/', views.lang),
+    path('board/', include('board.urls')),
+    path('chart/', include('chart.urls')),
+    path('temp1/', views.temp1),
+    path('temp2/', views.temp2),
+    path('temp3/', views.temp3),
+    path('quiz01/', views.quiz01),
+    path('quiz02/', views.quiz02),
+    path('quiz03/', views.quiz03),
+    path('image/', views.image),
 ]
