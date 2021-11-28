@@ -1,9 +1,51 @@
+from django.http import JsonResponse
 from django.shortcuts import HttpResponse as hr
 from django.shortcuts import render
+import requests, json
+from bs4 import BeautifulSoup
+from board.models import justCount
 
 
 def test(request):
-    return hr("test")
+    count = justCount.objects.get(id=1)
+    if request.method == 'GET':
+        info = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36'}
+
+        resp = requests.get(
+            'https://nocutnews.co.kr/news/5664341', headers=info)
+
+        html = resp.text
+
+        soup = BeautifulSoup(html, 'html.parser')
+
+        title = soup.select('.h_info > h2')
+        content = soup.select('#pnlContent')
+
+        for value in title:
+            textTitle = value.text
+
+        for value in content:
+            textContent = value.text
+
+        context = {
+            'title': textTitle,
+            'content': textContent,
+            'good' : count,
+        }
+
+        return render(request, 'test.html', context)
+
+    elif request.method == 'POST':
+        data = json.loads(request.body)
+        count.좋아요 = data
+        count.save()
+        print(count.좋아요)
+        context = {
+            'good' : count,
+        }
+
+        return JsonResponse(context)
 
 
 def index(request):
@@ -153,14 +195,17 @@ def quiz02(request):
 
 def quiz03(request):
     context = {
-        "menu":['순위','국가','승점','승','무','패','득점','실점','골득실'],
+        "menu": ['순위', '국가', '승점', '승', '무', '패', '득점', '실점', '골득실'],
         "score": [
-            [1, {"이란": "https://overseas.mofa.go.kr/ir-ko/index.do"}, 17, 5, 2, 0, 6, 0, 6],
+            [1, {"이란": "https://overseas.mofa.go.kr/ir-ko/index.do"},
+                17, 5, 2, 0, 6, 0, 6],
             [2, {"대한민국": "http://www.president.go.kr/"}, 13, 4, 1, 2, 9, 7, 2],
-            [3, {"시리아": "https://www.0404.go.kr/dev/country_view.mofa?idx=131"}, 8, 2, 2, 3, 2, 3, -1],
+            [3, {"시리아": "https://www.0404.go.kr/dev/country_view.mofa?idx=131"},
+                8, 2, 2, 3, 2, 3, -1],
         ],
     }
     return render(request, 'quiz/quiz03.html', context)
+
 
 def image(request):
     return render(request, 'image.html')

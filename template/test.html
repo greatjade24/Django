@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>crawlTest</title>
+    <style>
+        .content {
+            width: 50%;
+            display: inline-block;
+            font-weight: 500;
+            word-break: keep-all;
+        }
+    </style>
+    <script src="../static/js/jquery-3.1.1.min.js"></script>
+    <script src="../static/js/ajaxSetUp.js"></script>
+    <script>
+        function upGood() {
+            good = document.getElementById('good')
+            goodValue = document.getElementById('goodValue')
+            goodValue.value = Number(goodValue.value) + 1
+            $.ajax({
+                type: 'POST',
+                url: '/test/',
+                dataType: "json",
+                data: {
+                    data : JSON.stringify(goodValue.value),
+                },
+                success: function (json) {
+                    console.log("data pass success", json);
+                },
+                error: function (xhr, errmsg, err) {
+                    console.log('ㄹㅇㅋㅋ');
+                }
+            });
+        }
+    </script>
+</head>
+
+<body align="center">
+    <h2>{{ title }}</h2><br /><br />
+    <img src="https://file2.nocutnews.co.kr/newsroom/image/2021/11/27/202111271129149699_0.jpg" /><br />
+    <div class="content">{{ content }}</div><br /><br />
+    <button onclick="upGood()">좋아요<input id="goodValue" type="hidden" value="0" /></button>&nbsp;&nbsp;
+    <span id="good">{{ good.좋아요 }}</span>
+</body>
+
+</html>
